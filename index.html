@@ -1134,53 +1134,139 @@
   }
   typeLoop();
 
-  // Cursor trail
+  // ── GLOW BURST CURSOR ──
   const canvas = document.getElementById('cursorCanvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-  const trails = [];
-  const trailColors = [
-    '#C9A84C','#E8C97A','#a8832a',
-    '#4a90d9','#6eb5ff','#0A1628',
-    '#ffffff','#f0e6cc','#d4a843'
-  ];
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // Mouse position with smooth lerp follow
+  let mouseX = -200, mouseY = -200;
+  let glowX = -200, glowY = -200;
 
   document.addEventListener('mousemove', (e) => {
-    for (let i = 0; i < 3; i++) {
-      trails.push({
-        x: e.clientX + (Math.random() - 0.5) * 8,
-        y: e.clientY + (Math.random() - 0.5) * 8,
-        r: Math.random() * 5 + 2,
-        color: trailColors[Math.floor(Math.random() * trailColors.length)],
-        alpha: 0.9,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: (Math.random() - 0.5) * 1.5 - 0.5
-      });
-    }
+    mouseX = e.clientX;
+    mouseY = e.clientY;
   });
 
-  function animTrail() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = trails.length - 1; i >= 0; i--) {
-      const t = trails[i];
-      ctx.beginPath();
-      ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
-      ctx.fillStyle = t.color;
-      ctx.globalAlpha = t.alpha;
-      ctx.fill();
-      t.x += t.vx;
-      t.y += t.vy;
-      t.r *= 0.93;
-      t.alpha *= 0.88;
-      if (t.alpha < 0.02) trails.splice(i, 1);
+  // Burst particles on move
+  const particles = [];
+  const burstColors = [
+    { r:255, g:220, b:80 },   // bright gold
+    { r:201, g:168, b:76 },   // brand gold
+    { r:255, g:255, b:200 },  // warm white
+    { r:100, g:180, b:255 },  // cool blue
+    { r:255, g:160, b:60 },   // amber
+    { r:200, g:240, b:255 },  // ice blue
+    { r:255, g:255, b:255 },  // white
+  ];
+
+  let lastX = -200, lastY = -200;
+  document.addEventListener('mousemove', (e) => {
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    const speed = Math.sqrt(dx*dx + dy*dy);
+    const count = Math.min(Math.floor(speed * 0.4) + 2, 10);
+
+    for (let i = 0; i < count; i++) {
+      const col = burstColors[Math.floor(Math.random() * burstColors.length)];
+      const angle = Math.random() * Math.PI * 2;
+      const vel = Math.random() * 1.8 + 0.3;
+      particles.push({
+        x: e.clientX,
+        y: e.clientY,
+        vx: Math.cos(angle) * vel * 0.6,
+        vy: Math.sin(angle) * vel * 0.6,
+        r: Math.random() * 3.5 + 1.5,
+        maxR: Math.random() * 3.5 + 1.5,
+        life: 1.0,
+        decay: Math.random() * 0.025 + 0.018,
+        r_col: col.r, g_col: col.g, b_col: col.b
+      });
     }
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(animTrail);
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
+
+  function drawGlowBurst(x, y) {
+    // Outer soft halo
+    const halo = ctx.createRadialGradient(x, y, 0, x, y, 38);
+    halo.addColorStop(0,   'rgba(201,168,76,0.18)');
+    halo.addColorStop(0.4, 'rgba(201,168,76,0.08)');
+    halo.addColorStop(1,   'rgba(201,168,76,0)');
+    ctx.beginPath();
+    ctx.arc(x, y, 38, 0, Math.PI * 2);
+    ctx.fillStyle = halo;
+    ctx.fill();
+
+    // Mid glow ring
+    const mid = ctx.createRadialGradient(x, y, 0, x, y, 18);
+    mid.addColorStop(0,   'rgba(255,230,120,0.55)');
+    mid.addColorStop(0.5, 'rgba(201,168,76,0.25)');
+    mid.addColorStop(1,   'rgba(201,168,76,0)');
+    ctx.beginPath();
+    ctx.arc(x, y, 18, 0, Math.PI * 2);
+    ctx.fillStyle = mid;
+    ctx.fill();
+
+    // Bright core
+    const core = ctx.createRadialGradient(x, y, 0, x, y, 7);
+    core.addColorStop(0,   'rgba(255,255,255,0.95)');
+    core.addColorStop(0.3, 'rgba(255,230,100,0.85)');
+    core.addColorStop(0.7, 'rgba(201,168,76,0.5)');
+    core.addColorStop(1,   'rgba(201,168,76,0)');
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fillStyle = core;
+    ctx.fill();
   }
-  animTrail();
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Smooth lerp follow
+    glowX += (mouseX - glowX) * 0.12;
+    glowY += (mouseY - glowY) * 0.12;
+
+    // Draw glow burst at lerped position
+    drawGlowBurst(glowX, glowY);
+
+    // Draw & update particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.96;
+      p.vy *= 0.96;
+      p.life -= p.decay;
+
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+      // Glowing particle
+      const pg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 2.5);
+      pg.addColorStop(0,   `rgba(${p.r_col},${p.g_col},${p.b_col},${p.life * 0.9})`);
+      pg.addColorStop(0.5, `rgba(${p.r_col},${p.g_col},${p.b_col},${p.life * 0.3})`);
+      pg.addColorStop(1,   `rgba(${p.r_col},${p.g_col},${p.b_col},0)`);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = pg;
+      ctx.fill();
+
+      // Solid bright centre
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.r_col},${p.g_col},${p.b_col},${p.life * 0.85})`;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(animate);
+  }
+  animate();
 </script>
 </body>
 </html>
