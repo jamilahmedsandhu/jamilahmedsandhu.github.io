@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects | Jamil Ahmed Sandhu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<style>
+  :root {--navy:#0A1628;--navy-mid:#112240;--gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#a8832a;--offwhite:#F8F6F2;--charcoal:#2C2C2C;--text-light:#6b7280;--white:#ffffff;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Open Sans",sans-serif;background:var(--offwhite);color:var(--charcoal);overflow-x:hidden;}
+  #cursorCanvas{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;width:100%;height:100%;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.25);padding:0 4rem;display:flex;align-items:center;justify-content:space-between;height:70px;}
+  .nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:600;color:var(--gold);text-decoration:none;}
+  .nav-logo span{color:var(--white);font-weight:300;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{font-family:"Montserrat",sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.75);text-decoration:none;position:relative;padding-bottom:4px;transition:color 0.3s;}
+  .nav-links a::after{content:"";position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+  .nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+  .page-banner{background:var(--navy);padding:10rem 4rem 5rem;position:relative;overflow:hidden;}
+  .page-banner-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 80% 50%,rgba(201,168,76,0.06) 0%,transparent 70%);}
+  .page-banner-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:60px 60px;}
+  .page-banner-inner{position:relative;z-index:2;max-width:1300px;margin:0 auto;}
+  .page-eyebrow{font-family:"Montserrat",sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+  .page-eyebrow::before{content:"";display:block;width:40px;height:1px;background:var(--gold);}
+  .page-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:700;color:var(--white);line-height:1.05;margin-bottom:1.5rem;}
+  .page-title em{color:var(--gold);font-style:normal;}
+  .page-subtitle{font-family:"Open Sans",sans-serif;font-size:0.95rem;color:rgba(255,255,255,0.5);max-width:650px;line-height:1.8;}
+  .page-stats{display:flex;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+  .page-stat-num{font-family:"Cormorant Garamond",serif;font-size:2.8rem;font-weight:700;color:var(--gold);display:block;line-height:1;}
+  .page-stat-label{font-family:"Montserrat",sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.3rem;display:block;}
+  #projects{padding:6rem 4rem;max-width:1300px;margin:0 auto;}
+  .back-top{display:inline-flex;align-items:center;gap:0.5rem;font-family:"Montserrat",sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);text-decoration:none;margin-bottom:4rem;transition:gap 0.3s;}
+  .back-top:hover{gap:0.9rem;}
+  .project-card{display:grid;grid-template-columns:420px 1fr;gap:0;background:var(--white);margin-bottom:4rem;box-shadow:0 4px 40px rgba(0,0,0,0.08);overflow:hidden;transition:transform 0.4s ease,box-shadow 0.4s ease;position:relative;}
+  .project-card:hover{transform:translateY(-6px);box-shadow:0 16px 60px rgba(0,0,0,0.14);}
+  .project-card:nth-child(even){grid-template-columns:1fr 420px;}
+  .project-card:nth-child(even) .project-image{order:2;}
+  .project-card:nth-child(even) .project-body{order:1;}
+  .project-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform 0.4s ease;z-index:2;}
+  .project-card:hover::before{transform:scaleY(1);}
+  .project-image{position:relative;overflow:hidden;min-height:340px;}
+  .project-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;display:block;}
+  .project-card:hover .project-image img{transform:scale(1.06);}
+  .project-image-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,0.5) 0%,rgba(10,22,40,0.1) 100%);transition:opacity 0.4s;}
+  .project-card:hover .project-image-overlay{opacity:0.4;}
+  .project-number{position:absolute;top:1.5rem;left:1.5rem;font-family:"Cormorant Garamond",serif;font-size:3rem;font-weight:700;color:rgba(255,255,255,0.15);line-height:1;z-index:1;transition:color 0.3s;}
+  .project-card:hover .project-number{color:rgba(201,168,76,0.4);}
+  .project-sector-tag{position:absolute;bottom:1.5rem;left:1.5rem;font-family:"Montserrat",sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;background:var(--gold);color:var(--navy);padding:0.4rem 0.9rem;z-index:1;}
+  .project-body{padding:2.5rem 3rem;display:flex;flex-direction:column;justify-content:center;}
+  .project-meta{display:flex;gap:1.5rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+  .project-meta-item{font-family:"Montserrat",sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);display:flex;align-items:center;gap:0.4rem;}
+  .project-meta-item span{color:var(--gold-dim);}
+  .project-title{font-family:"Cormorant Garamond",serif;font-size:1.9rem;font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:0.4rem;}
+  .project-role{font-family:"Montserrat",sans-serif;font-size:0.75rem;font-weight:600;color:var(--gold-dim);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(0,0,0,0.08);}
+  .project-achievements{list-style:none;margin-bottom:1.8rem;}
+  .project-achievements li{font-family:"Open Sans",sans-serif;font-size:0.875rem;color:#3a3a3a;line-height:1.7;padding:0.55rem 0;display:flex;align-items:flex-start;gap:0.8rem;border-bottom:1px solid rgba(0,0,0,0.05);}
+  .project-achievements li:last-child{border-bottom:none;}
+  .project-achievements li::before{content:"▸";color:var(--gold);font-size:0.75rem;margin-top:0.3rem;flex-shrink:0;}
+  .project-value-bar{display:flex;gap:2rem;flex-wrap:wrap;padding-top:1.2rem;border-top:1px solid rgba(0,0,0,0.06);}
+  .project-value-num{font-family:"Cormorant Garamond",serif;font-size:1.6rem;font-weight:700;color:var(--navy);display:block;}
+  .project-value-label{font-family:"Montserrat",sans-serif;font-size:0.58rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);}
+  footer{background:var(--navy);padding:2rem 4rem;text-align:center;border-top:1px solid rgba(201,168,76,0.1);margin-top:2rem;}
+  footer p{font-family:"Montserrat",sans-serif;font-size:0.7rem;color:rgba(255,255,255,0.25);letter-spacing:0.1em;}
+  footer span{color:var(--gold);}
+  @media(max-width:900px){nav{padding:0 1.5rem;}.nav-links{gap:1rem;}.page-banner{padding:8rem 1.5rem 3rem;}#projects{padding:3rem 1.5rem;}.project-card,.project-card:nth-child(even){grid-template-columns:1fr;}.project-card:nth-child(even) .project-image,.project-card:nth-child(even) .project-body{order:unset;}.project-image{min-height:220px;}.project-body{padding:2rem 1.5rem;}}
+</style>
+</head>
+<body>
+<canvas id="cursorCanvas"></canvas>
+<nav>
+  <a href="index.html" class="nav-logo">Jamil <span>Ahmed Sandhu</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="insights.html">Insights</a></li>
+    <li><a href="cv.html">CV</a></li>
+    <li><a href="index.html#contact-strip">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-banner">
+  <div class="page-banner-bg"></div>
+  <div class="page-banner-grid"></div>
+  <div class="page-banner-inner">
+    <div class="page-eyebrow">Career Portfolio</div>
+    <h1 class="page-title">11 Projects.<br><em>Zero LTI.</em></h1>
+    <p class="page-subtitle">21 years of operational HSE and Fire Life Safety leadership across GIGA-scale developments, national security infrastructure, oil &amp; gas, high-rise facilities, industrial shutdowns, and manufacturing — in Saudi Arabia and Pakistan.</p>
+    <div class="page-stats">
+      <div class="page-stat"><span class="page-stat-num">11</span><span class="page-stat-label">Projects Delivered</span></div>
+      <div class="page-stat"><span class="page-stat-num">$25B+</span><span class="page-stat-label">Portfolio Value</span></div>
+      <div class="page-stat"><span class="page-stat-num">Zero</span><span class="page-stat-label">LTI History</span></div>
+      <div class="page-stat"><span class="page-stat-num">21</span><span class="page-stat-label">Years Experience</span></div>
+      <div class="page-stat"><span class="page-stat-num">9+</span><span class="page-stat-label">Years in KSA</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="projects">
+  <a href="index.html" class="back-top">&#8592; Back to Home</a>
+
+  <!-- 01 MIFON -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/MIFON-AlUla.jpeg" alt="MIFON Last Mile">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">01</div>
+      <div class="project-sector-tag">GIGA &#8212; National Security</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Ministry of Interior / RCU AlUla</div>
+        <div class="project-meta-item"><span>Employer</span> Thabthabat</div>
+        <div class="project-meta-item"><span>Duration</span> July 2024 &#8212; Present</div>
+      </div>
+      <h2 class="project-title">MIFON Last Mile Project &#8212; RCU AlUla</h2>
+      <div class="project-role">Project HSE &amp; FLS Manager</div>
+      <ul class="project-achievements">
+        <li>Leading HSE and FLS programme for the Ministry of Interior national security fiber optic network across 7 active UNESCO World Heritage sites — Hegra, Elephant Rock, Dadan, Sharaan, Ashar, RCU Museum, and AlUla Old Town — within the $15B Royal Commission for AlUla masterplan zone</li>
+        <li>Developing and implementing site-specific risk assessments, method statements, and PTW governance for underground fiber optic installation in UNESCO-protected heritage zones with zero damage to protected structures and zero incidents across all 7 sites</li>
+        <li>Coordinating HSE compliance across Ministry of Interior, Royal Commission, and multiple telecom contractors simultaneously; maintaining regulatory alignment across all stakeholder interfaces throughout project lifecycle</li>
+        <li>Establishing emergency response protocols and evacuation procedures for sensitive heritage zones — integrating site-specific hazard identification with RCU security and access requirements for live national security infrastructure</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">7</span><span class="project-value-label">UNESCO Heritage Sites</span></div>
+        <div><span class="project-value-num">$15B</span><span class="project-value-label">RCU Masterplan Zone</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 Digital City -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/Digital%20city%20.jpeg" alt="Digital City Riyadh">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">02</div>
+      <div class="project-sector-tag">GIGA &#8212; High-Rise FM</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Osool RE / GOSI</div>
+        <div class="project-meta-item"><span>Employer</span> Serco</div>
+        <div class="project-meta-item"><span>Duration</span> July 2022 &#8212; June 2024</div>
+      </div>
+      <h2 class="project-title">Digital City Riyadh &#8212; GOSI Real Estate Portfolio</h2>
+      <div class="project-role">HSE &amp; FLS Manager PMO &#8212; Facility Management</div>
+      <ul class="project-achievements">
+        <li>Delivered HSE and FLS compliance management across Saudi Arabia&#39;s first smart city — 30 buildings on a 470-acre campus including 4 occupied high-rise towers (21 floors each) with 1,000 to 6,000 daily occupants, serving GOSI&#39;s national real estate portfolio under Osool Real Estate</li>
+        <li>Established and operationalised a centralised Emergency Services Control Centre integrating independent FLS systems of all 30 buildings under a single unified management framework — including fire alarm, evacuation, access control, and emergency communication across all tenants and contractors</li>
+        <li>Managed PMO-level HSE oversight for all contractor activities across the estate; achieved 100% NCR closeout rate and zero repeat violations throughout full 2-year tenure with zero LTI and zero major incidents</li>
+        <li>Developed and delivered comprehensive emergency evacuation plans, fire drills, and FLS awareness programmes for up to 6,000 occupants across mixed-use high-rise buildings — ensuring full compliance with Saudi Civil Defence and NFPA standards</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">30</span><span class="project-value-label">Buildings</span></div>
+        <div><span class="project-value-num">4</span><span class="project-value-label">21-Floor Towers</span></div>
+        <div><span class="project-value-num">6,000</span><span class="project-value-label">Peak Occupants</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 RCU Heritage -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/RCU-Heritage.jpeg" alt="RCU Heritage">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">03</div>
+      <div class="project-sector-tag">GIGA &#8212; Heritage Construction</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Royal Commission for AlUla</div>
+        <div class="project-meta-item"><span>Employer</span> Meinhardt Group &#8212; TBC</div>
+        <div class="project-meta-item"><span>Duration</span> July 2021 &#8212; June 2022</div>
+      </div>
+      <h2 class="project-title">RCU AlUla &#8212; Heritage Construction Projects</h2>
+      <div class="project-role">HSE Manager &#8212; Construction &amp; Heritage Restoration</div>
+      <ul class="project-achievements">
+        <li>Managed HSE programme across Royal Commission for AlUla construction and heritage restoration projects — including Al-Faris International School — within the $15B RCU masterplan UNESCO World Heritage zone, ensuring zero impact on protected heritage assets throughout all construction activities</li>
+        <li>Developed comprehensive PTW governance, hazard identification, and risk assessment frameworks for heritage-sensitive multi-stakeholder construction environment involving multiple international contractors, RCU PMC, and specialist heritage consultants</li>
+        <li>Implemented incident reporting system, safety observation programme, and weekly HSE performance reporting to PMC; maintained 100% PTW compliance across all high-risk activities including excavation, lifting, and utility installation in proximity to heritage structures</li>
+        <li>Conducted workforce HSE inductions, toolbox talks, and emergency response drills tailored to UNESCO zone working restrictions; zero LTI, zero incidents, and zero damage to protected heritage assets throughout full project tenure</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">$15B</span><span class="project-value-label">RCU Masterplan</span></div>
+        <div><span class="project-value-num">UNESCO</span><span class="project-value-label">World Heritage Zone</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 Aramco Pipeline -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/Aramco-Pipeline.jpeg" alt="Aramco Pipeline">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">04</div>
+      <div class="project-sector-tag">Construction &#8212; PMC</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Saudi Aramco</div>
+        <div class="project-meta-item"><span>Employer</span> Arabtec Jardaneh</div>
+        <div class="project-meta-item"><span>Duration</span> January 2020 &#8212; June 2021</div>
+      </div>
+      <h2 class="project-title">Saudi Aramco East West Pipeline &#8212; Residential Compounds</h2>
+      <div class="project-role">HSE Manager &#8212; PMC Multi-Site Operations</div>
+      <ul class="project-achievements">
+        <li>Delivered multi-site HSE compliance management across 6 Saudi Aramco residential compounds totalling 770,000 sqm — housing 1,700 Aramco employees along the 1,200km East West Pipeline corridor — under Saudi Aramco world-class HSE standards and ATS-2481 vendor approval</li>
+        <li>Governed PTW, IRS, NCR, and CAR systems across all 6 sites simultaneously; implemented risk assessment protocols for heavy machinery operations, crane lifts, deep excavation, and heat stress management for outdoor workforce operating in extreme desert conditions</li>
+        <li>Developed and maintained site-specific Emergency Response Plans and firefighting readiness programmes for each compound; coordinated emergency drills, first aid coverage, and evacuation exercises across all sites throughout the project lifecycle</li>
+        <li>Achieved zero LTI and zero major incidents across all critical operations including lifting, excavation, and heavy machinery across full multi-site PMC environment; maintained 100% Saudi Aramco HSE audit compliance throughout</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">6</span><span class="project-value-label">Compounds</span></div>
+        <div><span class="project-value-num">770K sqm</span><span class="project-value-label">Project Area</span></div>
+        <div><span class="project-value-num">1,200km</span><span class="project-value-label">Pipeline Corridor</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 KAFD -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/KAFD-Riyadh.jpeg" alt="KAFD">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">05</div>
+      <div class="project-sector-tag">GIGA &#8212; Mega Construction</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> KAFD / Parsons PMC</div>
+        <div class="project-meta-item"><span>Employer</span> Saudi Baytur</div>
+        <div class="project-meta-item"><span>Duration</span> December 2019 &#8212; December 2020</div>
+      </div>
+      <h2 class="project-title">King Abdullah Financial District &#8212; Parcel 2, 7 Towers</h2>
+      <div class="project-role">HSE Manager &#8212; Mega Project Construction</div>
+      <ul class="project-achievements">
+        <li>Managed HSE across 7 mixed-use towers up to 109m (700+ workforce) within the world&#39;s largest LEED Platinum-certified financial district — owned by Saudi Public Investment Fund — under Parsons PMC governance and KAFD authority standards</li>
+        <li>Led full COVID-19 pandemic crisis management from project onset in March 2020 — developed and implemented COVID Response Plan, quarantine protocols, site segregation, medical surveillance, and workforce welfare procedures resulting in zero fatalities, 100% quarantine compliance, and on-time project handover despite full pandemic disruption</li>
+        <li>Maintained zero LTI, zero fatalities, zero NCRs, and 100% safety observation closeout across all 7 towers and all project phases; established daily safety briefings, hazard reporting system, and weekly HSE performance dashboard reporting to Parsons PMC</li>
+        <li>Coordinated high-risk simultaneous operations (SIMOPS) across multiple tower sites — managing crane lifts, concrete pours, facade installation, and MEP works with active workforce of 700+ in confined urban construction environment</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">7</span><span class="project-value-label">Towers &#8212; 109m</span></div>
+        <div><span class="project-value-num">700+</span><span class="project-value-label">Workforce</span></div>
+        <div><span class="project-value-num">LEED</span><span class="project-value-label">Platinum District</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 SASREF SABIC SADARA -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/SASREF-SABIC.jpeg" alt="Industrial Shutdowns">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">06</div>
+      <div class="project-sector-tag">Oil &amp; Gas &#8212; Shutdowns</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> SASREF / SABIC / SADARA</div>
+        <div class="project-meta-item"><span>Duration</span> May 2019 &#8212; November 2019</div>
+        <div class="project-meta-item"><span>Location</span> Jubail, Saudi Arabia</div>
+      </div>
+      <h2 class="project-title">SASREF, SABIC &amp; SADARA &#8212; Industrial Shutdowns</h2>
+      <div class="project-role">HSE Coordinator &#8212; Shutdowns &amp; Turnarounds</div>
+      <ul class="project-achievements">
+        <li>Executed three consecutive critical shutdowns within 6 months: SASREF TGU &amp; VBU Turnaround (305,000 BPD — world&#39;s largest export refinery, Saudi Aramco-Shell JV); SABIC Al-Razee IV Methanol Plant Turnaround; and SADARA Isocyanates and Nitric Acid Plants (Saudi Aramco-Dow Chemical JV) — each with distinct regulatory frameworks and hazard profiles</li>
+        <li>Managed phosgene and critical-life hazard zones across SADARA Isocyanates Plant — administered emergency escape mouth-bit and phosgene detection badge provision, assurance, and decontamination protocols for 300+ personnel working in live phosgene production environment under 24x7 shift operations</li>
+        <li>Implemented shutdown-specific PTW, LOTO, confined space entry, and hot work programmes for each facility; coordinated with plant operations, maintenance contractors, and HSE authorities to maintain regulatory compliance across all simultaneous high-risk activities</li>
+        <li>Delivered zero LTI and zero fatalities across all three shutdowns on accelerated schedules under the world&#39;s most stringent HSE standards — Saudi Aramco, SABIC, and SADARA — with 100% PTW compliance and zero environmental incidents</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">3</span><span class="project-value-label">World-Class Facilities</span></div>
+        <div><span class="project-value-num">300+</span><span class="project-value-label">Personnel</span></div>
+        <div><span class="project-value-num">24x7</span><span class="project-value-label">Operations</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 Border Security -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/Border-Security.jpg" alt="Border Security">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">07</div>
+      <div class="project-sector-tag">Government &#8212; Security Infrastructure</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Saudi Government / Military</div>
+        <div class="project-meta-item"><span>Employer</span> IVRCL &#8212; ABV Rock</div>
+        <div class="project-meta-item"><span>Duration</span> November 2017 &#8212; March 2019</div>
+      </div>
+      <h2 class="project-title">Saudi Border Security Development &#8212; Ardah</h2>
+      <div class="project-role">HSE Manager &#8212; Government &amp; Military Client</div>
+      <ul class="project-achievements">
+        <li>Delivered end-to-end HSE management for Saudi-Oman border security infrastructure construction in a remote government and military client environment — operating under heightened security clearance and operational confidentiality requirements across 16 months</li>
+        <li>Conducted HAZID and HAZOP analysis, Environmental Impact Assessment, and comprehensive Emergency Response Plan development; implemented full emergency drill programme covering fire, medical, and evacuation scenarios across remote desert site with limited external emergency services access</li>
+        <li>Developed HSE scoreboard and safety performance tracking system used for weekly reporting to government client; managed heat stress, remote medical emergency response, and desert terrain-specific hazard controls for multinational workforce</li>
+        <li>Achieved zero incidents, zero environmental violations, and full regulatory compliance throughout project lifecycle in a remote high-risk border security environment — delivering on government and military client safety standards without a single recordable event</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">16</span><span class="project-value-label">Months Duration</span></div>
+        <div><span class="project-value-num">Gov</span><span class="project-value-label">Military Client</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 Aramco EDRC -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/Aramco-EDRC.jpeg" alt="Aramco EDRC">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">08</div>
+      <div class="project-sector-tag">Construction &#8212; Saudi Aramco</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Saudi Aramco (ATS-2481)</div>
+        <div class="project-meta-item"><span>Employer</span> Arabtec Construction LLC</div>
+        <div class="project-meta-item"><span>Duration</span> November 2016 &#8212; November 2017</div>
+      </div>
+      <h2 class="project-title">Saudi Aramco EDRC Package 5 &#8212; Dhahran Residential</h2>
+      <div class="project-role">HSE &amp; Firefighting Specialist &#8212; Saudi Aramco Approved</div>
+      <ul class="project-achievements">
+        <li>Delivered HSE and firefighting specialist services for 380 precast concrete villas (167,000 sqm) within Saudi Aramco&#39;s Dhahran Ajyal Residential Development — governed by Saudi Aramco world-class HSE standards under vendor approval ATS-2481 — the most stringent contractor HSE framework in the Kingdom</li>
+        <li>Implemented Saudi Aramco code of conduct, scaffolding inspection programme, power tools and heavy machinery inspection regime; conducted Training Needs Analysis and designed and delivered comprehensive safety training curriculum for full workforce covering permit systems, emergency response, and trade-specific hazard controls</li>
+        <li>Managed firefighting readiness across 380 active construction sites simultaneously — fire extinguisher inspection, hot work fire watch, temporary electrical safety, and flammable material storage compliance — maintaining 100% readiness throughout project</li>
+        <li>Delivered zero incidents across all scaffolding and high-risk construction operations across 380 villas; achieved full Saudi Aramco HSE audit compliance with zero observations raised against firefighting systems or HSE documentation throughout entire project tenure</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">380</span><span class="project-value-label">Villas</span></div>
+        <div><span class="project-value-num">167K sqm</span><span class="project-value-label">Built-Up Area</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 09 Al-Abbas -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/AlAbbas-Manufacturing.jpeg" alt="Al-Abbas">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">09</div>
+      <div class="project-sector-tag">Manufacturing &#8212; Industrial</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Al-Abbas Group</div>
+        <div class="project-meta-item"><span>Duration</span> August 2013 &#8212; November 2016</div>
+        <div class="project-meta-item"><span>Location</span> Pakistan</div>
+      </div>
+      <h2 class="project-title">Al-Abbas Group &#8212; Extension &amp; Standardization</h2>
+      <div class="project-role">Fire &amp; Safety Manager &#8212; Group HSE &amp; Social Compliance</div>
+      <ul class="project-achievements">
+        <li>Led group-level HSE and social compliance management across 3 industrial facilities — Fabrics Dyeing &amp; Processing, Garments Manufacturing, and Onshore Ship Breaking — each with distinct hazard profiles including chemical handling, machinery operations, and marine dismantling hazards</li>
+        <li>Achieved ISO 9001 Quality Management System and SA 8000 Social Accountability international certifications across all facilities — managing the full certification lifecycle from gap analysis through audit preparation, corrective action, and final certification — with ongoing compliance maintenance</li>
+        <li>Designed, installed, and maintained firefighting infrastructure across all 3 sites — fire pumps, sprinkler systems, detection and alarm systems, hose reels, and extinguisher networks; coordinated with government bodies, international inspection authorities, and Insurance Corporation for compliance audits and insurance renewal</li>
+        <li>Developed and delivered comprehensive emergency evacuation procedures, firefighting demonstration programmes, and chemical spill response drills for all sites; established incident reporting and investigation system and maintained zero LTI record throughout 3-year tenure</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">3</span><span class="project-value-label">Industrial Sites</span></div>
+        <div><span class="project-value-num">ISO 9001</span><span class="project-value-label">&amp; SA 8000</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">LTI Record</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 Dawlance -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/Dawlance.jpeg" alt="Dawlance">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">10</div>
+      <div class="project-sector-tag">Manufacturing &#8212; Electronics</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> Dawlance Private Limited</div>
+        <div class="project-meta-item"><span>Duration</span> April 2011 &#8212; July 2013</div>
+        <div class="project-meta-item"><span>Location</span> Pakistan</div>
+      </div>
+      <h2 class="project-title">Dawlance Private Limited &#8212; Manufacturing HSE</h2>
+      <div class="project-role">HSE Coordinator &#8212; Home Appliances &amp; Electronics Manufacturing</div>
+      <ul class="project-achievements">
+        <li>Managed HSE coordination for Pakistan&#39;s leading home appliances manufacturer across ISO 9001 (Quality Management) and ISO 14001 (Environmental Management) certified operations — covering refrigerators, air conditioners, and home appliance manufacturing lines with complex electrical, mechanical, and chemical hazard environments</li>
+        <li>Conducted comprehensive risk assessments and JSA (Job Safety Analysis) for all manufacturing processes; implemented PTW system, chemical handling procedures, and machinery guarding inspection programme across production floor and maintenance operations</li>
+        <li>Managed incident investigation and root cause analysis system; developed corrective action tracking and closure process; prepared monthly HSE performance reports and KPI dashboards for senior management review</li>
+        <li>Delivered ISO 9001 and ISO 14001 compliance maintenance including internal audits, management review preparation, and nonconformance management; implemented workforce safety training and emergency preparedness programmes achieving zero major incidents throughout full 2-year tenure</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">ISO 9001</span><span class="project-value-label">&amp; 14001</span></div>
+        <div><span class="project-value-num">QMS &amp; EMS</span><span class="project-value-label">Certified</span></div>
+        <div><span class="project-value-num">Zero</span><span class="project-value-label">Major Incidents</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 PARCO -->
+  <div class="project-card" data-aos="fade-up">
+    <div class="project-image">
+      <img src="https://raw.githubusercontent.com/jamilahmedsandhu/jamilahmedsandhu.github.io/main/images/Parco%20.jpg" alt="PARCO">
+      <div class="project-image-overlay"></div>
+      <div class="project-number">11</div>
+      <div class="project-sector-tag">Oil &amp; Gas &#8212; Refinery</div>
+    </div>
+    <div class="project-body">
+      <div class="project-meta">
+        <div class="project-meta-item"><span>Client</span> PARCO (Abu Dhabi&#8211;Pakistan JV / TAQA)</div>
+        <div class="project-meta-item"><span>Duration</span> June 2004 &#8212; March 2011</div>
+        <div class="project-meta-item"><span>Location</span> Pakistan</div>
+      </div>
+      <h2 class="project-title">PARCO Mid-Country Refinery &#8212; Expansion &amp; Modification</h2>
+      <div class="project-role">HSE Officer &#8212; Oil Refinery Operations &amp; Expansion</div>
+      <ul class="project-achievements">
+        <li>Served 7-year tenure as HSE Officer at Pakistan&#39;s largest and most strategically significant refinery (USD 886M, 120,000 BPD) — a Joint Venture of Abu Dhabi National Energy Company (TAQA) and the Government of Pakistan — operating under a fully integrated IMS: ISO 9001, ISO 14001, and OHSAS 18001</li>
+        <li>Managed operational testing, commissioning, and ongoing certification of one of Pakistan&#39;s most comprehensive firefighting infrastructure networks — 8,000 GPM systems including fire tenders, PSV systems, hydrant networks, water monitors, foam monitors, and both fixed and trolley-mounted firefighting appliances across live refinery operations</li>
+        <li>Conducted fire risk assessments, hot work PTW governance, and emergency shutdown procedure development across live hydrocarbon processing units; coordinated mutual aid agreements with external emergency services and maintained refinery fire brigade readiness and training programme</li>
+        <li>Delivered zero major incidents and zero fatalities during live refinery expansion and modification phases across 7-year tenure; maintained IMS triple certification throughout — contributing to PARCO&#39;s internationally recognised safety record as a model refinery operation in South Asia</li>
+      </ul>
+      <div class="project-value-bar">
+        <div><span class="project-value-num">$886M</span><span class="project-value-label">Facility Value</span></div>
+        <div><span class="project-value-num">120K BPD</span><span class="project-value-label">Capacity</span></div>
+        <div><span class="project-value-num">7 Years</span><span class="project-value-label">Tenure</span></div>
+        <div><span class="project-value-num">IMS</span><span class="project-value-label">Triple Certified</span></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <p>&copy; 2025 <span>Jamil Ahmed Sandhu</span> &nbsp;&#183;&nbsp; Senior HSE &amp; Fire Life Safety Professional &nbsp;&#183;&nbsp; Riyadh, Saudi Arabia</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init({duration:800,once:true,offset:60});
+  const canvas=document.getElementById("cursorCanvas"),ctx=canvas.getContext("2d");
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  let mx=-200,my=-200,gx=-200,gy=-200;
+  document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;});
+  const particles=[],cols=[{r:255,g:220,b:80},{r:201,g:168,b:76},{r:255,g:255,b:200},{r:100,g:180,b:255},{r:255,g:160,b:60},{r:255,g:255,b:255}];
+  let lx=-200,ly=-200;
+  document.addEventListener("mousemove",e=>{
+    const dx=e.clientX-lx,dy=e.clientY-ly,spd=Math.sqrt(dx*dx+dy*dy),n=Math.min(Math.floor(spd*0.4)+2,10);
+    for(let i=0;i<n;i++){const c=cols[Math.floor(Math.random()*cols.length)],a=Math.random()*Math.PI*2,v=Math.random()*1.8+0.3;particles.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*v*0.6,vy:Math.sin(a)*v*0.6,r:Math.random()*3.5+1.5,life:1,decay:Math.random()*0.025+0.018,r_col:c.r,g_col:c.g,b_col:c.b});}
+    lx=e.clientX;ly=e.clientY;
+  });
+  function drawGlow(x,y){
+    let g=ctx.createRadialGradient(x,y,0,x,y,38);g.addColorStop(0,"rgba(201,168,76,0.18)");g.addColorStop(0.4,"rgba(201,168,76,0.08)");g.addColorStop(1,"rgba(201,168,76,0)");ctx.beginPath();ctx.arc(x,y,38,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    g=ctx.createRadialGradient(x,y,0,x,y,18);g.addColorStop(0,"rgba(255,230,120,0.55)");g.addColorStop(0.5,"rgba(201,168,76,0.25)");g.addColorStop(1,"rgba(201,168,76,0)");ctx.beginPath();ctx.arc(x,y,18,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    g=ctx.createRadialGradient(x,y,0,x,y,7);g.addColorStop(0,"rgba(255,255,255,0.95)");g.addColorStop(0.3,"rgba(255,230,100,0.85)");g.addColorStop(0.7,"rgba(201,168,76,0.5)");g.addColorStop(1,"rgba(201,168,76,0)");ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);gx+=(mx-gx)*0.12;gy+=(my-gy)*0.12;drawGlow(gx,gy);
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vx*=0.96;p.vy*=0.96;p.life-=p.decay;
+      if(p.life<=0){particles.splice(i,1);continue;}
+      let pg=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*2.5);
+      pg.addColorStop(0,`rgba(${p.r_col},${p.g_col},${p.b_col},${p.life*0.9})`);
+      pg.addColorStop(0.5,`rgba(${p.r_col},${p.g_col},${p.b_col},${p.life*0.3})`);
+      pg.addColorStop(1,`rgba(${p.r_col},${p.g_col},${p.b_col},0)`);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*2.5,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);ctx.fillStyle=`rgba(${p.r_col},${p.g_col},${p.b_col},${p.life*0.85})`;ctx.fill();
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>
+</body>
+</html>
