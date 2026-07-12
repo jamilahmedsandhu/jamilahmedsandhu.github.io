@@ -12,6 +12,18 @@
 html{scroll-behavior:smooth;}
 body{font-family:"Open Sans",sans-serif;background:var(--offwhite);color:var(--charcoal);overflow-x:hidden;}
 #cursorCanvas{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;width:100%;height:100%;}
+/* PAGE TRANSITIONS */
+.page-transition{position:fixed;inset:0;background:var(--navy);z-index:99998;pointer-events:none;opacity:0;transition:opacity 0.35s ease;}
+.page-transition.active{opacity:1;pointer-events:all;}
+
+/* MAGNETIC BUTTON */
+.btn-magnetic{transition:transform 0.3s cubic-bezier(0.23,1,0.32,1),box-shadow 0.3s ease;}
+
+/* GSAP SCROLL REVEAL */
+.gsap-reveal{opacity:0;transform:translateY(30px);}
+.gsap-reveal-left{opacity:0;transform:translateX(-30px);}
+.gsap-reveal-right{opacity:0;transform:translateX(30px);}
+
 .section-divider{width:40px;height:2px;background:var(--gold);margin:0 auto;opacity:0.3;}
 
 /* NAV */
@@ -162,6 +174,7 @@ footer em{color:var(--gold);font-style:normal;}
 </style>
 </head>
 <body>
+<div class="page-transition" id="pageTransition"></div>
 <canvas id="cursorCanvas"></canvas>
 
 <nav>
@@ -186,16 +199,16 @@ footer em{color:var(--gold);font-style:normal;}
       <div class="banner-title">Senior HSE &amp; Fire Life Safety Manager &nbsp;·&nbsp; Riyadh, Saudi Arabia</div>
       <p class="banner-tagline">22 years of operational HSE and Fire Life Safety leadership across GIGA-scale developments, national security infrastructure, oil &amp; gas, high-rise facilities, and industrial operations — with a Zero LTI record across every project delivered.</p><p class="banner-signature">Every safe return home begins with a safe workplace.</p>
       <div class="banner-stats">
-        <div class="banner-stat"><span class="banner-stat-num">22+</span><span class="banner-stat-label">Years Experience</span></div>
-        <div class="banner-stat"><span class="banner-stat-num">9+</span><span class="banner-stat-label">Years in KSA</span></div>
-        <div class="banner-stat"><span class="banner-stat-num">11</span><span class="banner-stat-label">Projects Delivered</span></div>
-        <div class="banner-stat"><span class="banner-stat-num">$25B+</span><span class="banner-stat-label">Portfolio Value</span></div>
+        <div class="banner-stat"><span class="banner-stat-num" data-count="22" data-suffix="+">22+</span><span class="banner-stat-label">Years Experience</span></div>
+        <div class="banner-stat"><span class="banner-stat-num" data-count="9" data-suffix="+">9+</span><span class="banner-stat-label">Years in KSA</span></div>
+        <div class="banner-stat"><span class="banner-stat-num" data-count="11" data-suffix="">11</span><span class="banner-stat-label">Projects Delivered</span></div>
+        <div class="banner-stat"><span class="banner-stat-num" data-count="25" data-prefix="$" data-suffix="B+">$25B+</span><span class="banner-stat-label">Portfolio Value</span></div>
         <div class="banner-stat"><span class="banner-stat-num">Zero</span><span class="banner-stat-label">LTI Record</span></div>
       </div>
       <div class="banner-ctas">
-        <a href="projects.html" class="btn-primary">Explore Projects</a>
-        <a href="insights.html" class="btn-secondary">Explore Insights</a>
-        <a href="cv.html" class="btn-secondary">Download CV</a>
+        <a href="projects.html" class="btn-primary btn-magnetic">Explore Projects</a>
+        <a href="insights.html" class="btn-secondary btn-magnetic">Explore Insights</a>
+        <a href="cv.html" class="btn-secondary btn-magnetic">Download CV</a>
       </div>
     </div>
     <div class="banner-photo-wrap">
@@ -209,7 +222,7 @@ footer em{color:var(--gold);font-style:normal;}
   <div class="section-inner">
     <div class="section-eyebrow">Professional Value</div>
     <h2 class="section-title">Value Delivered</h2>
-    <div class="problems-grid">
+    <div class="problems-grid gsap-reveal">
       <div class="problem-item"><span class="problem-bullet">▸</span><span class="problem-text">Rising TRIR and lagging incident metrics across complex multi-contractor environments</span></div>
       <div class="problem-item"><span class="problem-bullet">▸</span><span class="problem-text">Fire &amp; Life Safety systems non-compliant, unverified, or not integrated with operations</span></div>
       <div class="problem-item"><span class="problem-bullet">▸</span><span class="problem-text">Ineffective emergency response plans without tested evacuation procedures</span></div>
@@ -227,7 +240,7 @@ footer em{color:var(--gold);font-style:normal;}
   <div class="section-inner">
     <div class="section-eyebrow">Field-Proven Capability</div>
     <h2 class="section-title">Resolving Complex HSE Challenges</h2>
-    <div class="address-grid">
+    <div class="address-grid gsap-reveal">
       <div class="address-item"><p class="address-text">Rapid site assessment and gap identification — field-led, not desk-based</p></div>
       <div class="address-item"><p class="address-text">Collaborative engagement with existing HSE teams — integration, not replacement</p></div>
       <div class="address-item"><p class="address-text">Risk prioritisation and practical action planning with measurable outcomes</p></div>
@@ -244,7 +257,7 @@ footer em{color:var(--gold);font-style:normal;}
   <div class="section-inner">
     <div class="section-eyebrow">Proven Delivery</div>
     <h2 class="section-title">Project Impact</h2><p style="font-family:Montserrat,sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2rem;"><a href="projects.html" style="color:var(--gold);text-decoration:none;font-weight:700;letter-spacing:0.15em;display:inline-flex;align-items:center;gap:0.5rem;transition:gap 0.3s;" onmouseover="this.style.gap='1rem'" onmouseout="this.style.gap='0.5rem'">Explore all 11 Projects &#8594;</a></p>
-    <div class="achievements-grid">
+    <div class="achievements-grid gsap-reveal">
       <div class="achievement-card">
         <div class="achievement-project">Digital City Riyadh — Serco / Osool RE</div>
         <div class="achievement-title">Emergency Evacuation — 4 Occupied High-Rise Towers</div>
@@ -275,7 +288,7 @@ footer em{color:var(--gold);font-style:normal;}
   <div class="section-inner">
     <div class="section-eyebrow">Leadership Standard</div>
     <h2 class="section-title">Engagement Approach</h2>
-    <div class="engagement-grid">
+    <div class="engagement-grid gsap-reveal">
       <div class="engagement-card">
         <div class="engagement-num">01</div>
         <div class="engagement-title">Field Engagement &amp; Ground-Level Leadership</div>
@@ -305,7 +318,7 @@ footer em{color:var(--gold);font-style:normal;}
   <div class="section-inner">
     <div class="section-eyebrow">Technical Expertise</div>
     <h2 class="section-title">Core Competencies</h2>
-    <div class="competencies-wrap">
+    <div class="competencies-wrap gsap-reveal">
       <span class="comp-pill">HSE Management Systems</span>
       <span class="comp-pill">Fire &amp; Life Safety</span>
       <span class="comp-pill">Emergency Response Planning</span>
@@ -327,7 +340,7 @@ footer em{color:var(--gold);font-style:normal;}
   <div class="section-inner">
     <div class="section-eyebrow">Professional Standing</div>
     <h2 class="section-title">Credentials</h2>
-    <div class="credentials-grid">
+    <div class="credentials-grid gsap-reveal">
       <div class="cred-block">
         <h4>Qualifications</h4>
         <ul>
@@ -431,5 +444,153 @@ function animate(){
 }
 animate();
 </script>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── PAGE TRANSITION ──────────────────────────────────────────────────────────
+const overlay = document.getElementById('pageTransition');
+
+// Fade in on load
+window.addEventListener('load', () => {
+  gsap.fromTo(overlay, {opacity:1}, {opacity:0, duration:0.5, ease:'power2.out', onComplete:()=>overlay.style.pointerEvents='none'});
+});
+
+// Fade out on link click
+document.querySelectorAll('a[href]').forEach(link => {
+  const href = link.getAttribute('href');
+  if(!href.startsWith('#') && !href.startsWith('mailto') && !href.startsWith('tel') && !href.startsWith('http') && href.endsWith('.html')) {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      overlay.style.pointerEvents = 'all';
+      gsap.to(overlay, {opacity:1, duration:0.35, ease:'power2.in', onComplete:()=>window.location.href=href});
+    });
+  }
+});
+
+// ── ANIMATED COUNTERS ────────────────────────────────────────────────────────
+const counters = document.querySelectorAll('[data-count]');
+counters.forEach(counter => {
+  const target = parseInt(counter.getAttribute('data-count'));
+  const prefix = counter.getAttribute('data-prefix') || '';
+  const suffix = counter.getAttribute('data-suffix') || '';
+  const obj = {val: 0};
+
+  ScrollTrigger.create({
+    trigger: counter,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      gsap.to(obj, {
+        val: target,
+        duration: 2,
+        ease: 'power2.out',
+        onUpdate: () => {
+          counter.textContent = prefix + Math.round(obj.val) + suffix;
+        },
+        onComplete: () => {
+          counter.textContent = prefix + target + suffix;
+        }
+      });
+    }
+  });
+});
+
+// ── GSAP SCROLL REVEAL ───────────────────────────────────────────────────────
+gsap.utils.toArray('.gsap-reveal').forEach(el => {
+  gsap.fromTo(el,
+    {opacity:0, y:35},
+    {opacity:1, y:0, duration:0.9, ease:'power3.out',
+     scrollTrigger:{trigger:el, start:'top 82%', once:true}}
+  );
+});
+
+gsap.utils.toArray('.gsap-reveal-left').forEach(el => {
+  gsap.fromTo(el,
+    {opacity:0, x:-35},
+    {opacity:1, x:0, duration:0.9, ease:'power3.out',
+     scrollTrigger:{trigger:el, start:'top 82%', once:true}}
+  );
+});
+
+gsap.utils.toArray('.gsap-reveal-right').forEach(el => {
+  gsap.fromTo(el,
+    {opacity:0, x:35},
+    {opacity:1, x:0, duration:0.9, ease:'power3.out',
+     scrollTrigger:{trigger:el, start:'top 82%', once:true}}
+  );
+});
+
+// ── MAGNETIC BUTTONS ─────────────────────────────────────────────────────────
+document.querySelectorAll('.btn-magnetic').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    gsap.to(btn, {x: x * 0.25, y: y * 0.25, duration:0.4, ease:'power2.out'});
+  });
+  btn.addEventListener('mouseleave', () => {
+    gsap.to(btn, {x:0, y:0, duration:0.5, ease:'elastic.out(1,0.4)'});
+  });
+});
+
+// ── BANNER ENTRANCE ANIMATION ────────────────────────────────────────────────
+gsap.from('.banner-eyebrow', {opacity:0, y:20, duration:0.7, delay:0.3, ease:'power3.out'});
+gsap.from('.banner-name', {opacity:0, y:30, duration:0.9, delay:0.45, ease:'power3.out'});
+gsap.from('.banner-title', {opacity:0, y:20, duration:0.7, delay:0.6, ease:'power3.out'});
+gsap.from('.banner-tagline', {opacity:0, x:-20, duration:0.8, delay:0.75, ease:'power3.out'});
+gsap.from('.banner-signature', {opacity:0, duration:0.8, delay:0.9, ease:'power2.out'});
+gsap.from('.banner-stats .banner-stat', {opacity:0, y:20, duration:0.6, delay:1.0, stagger:0.1, ease:'power3.out'});
+gsap.from('.banner-ctas .btn-magnetic', {opacity:0, y:15, duration:0.6, delay:1.4, stagger:0.12, ease:'power3.out'});
+gsap.from('.banner-photo', {opacity:0, scale:0.95, duration:1.0, delay:0.5, ease:'power3.out'});
+
+// ── SECTION TITLE ANIMATIONS ─────────────────────────────────────────────────
+gsap.utils.toArray('.section-title').forEach(title => {
+  gsap.fromTo(title,
+    {opacity:0, y:25},
+    {opacity:1, y:0, duration:0.8, ease:'power3.out',
+     scrollTrigger:{trigger:title, start:'top 85%', once:true}}
+  );
+});
+
+gsap.utils.toArray('.section-eyebrow').forEach(eyebrow => {
+  gsap.fromTo(eyebrow,
+    {opacity:0, x:-15},
+    {opacity:1, x:0, duration:0.6, ease:'power2.out',
+     scrollTrigger:{trigger:eyebrow, start:'top 88%', once:true}}
+  );
+});
+
+// ── ACHIEVEMENT CARDS STAGGER ─────────────────────────────────────────────────
+gsap.utils.toArray('.achievement-card').forEach((card, i) => {
+  gsap.fromTo(card,
+    {opacity:0, y:40},
+    {opacity:1, y:0, duration:0.8, delay:i*0.15, ease:'power3.out',
+     scrollTrigger:{trigger:card, start:'top 85%', once:true}}
+  );
+});
+
+// ── ENGAGEMENT CARDS STAGGER ──────────────────────────────────────────────────
+gsap.utils.toArray('.engagement-card').forEach((card, i) => {
+  gsap.fromTo(card,
+    {opacity:0, y:30},
+    {opacity:1, y:0, duration:0.7, delay:i*0.12, ease:'power3.out',
+     scrollTrigger:{trigger:card, start:'top 85%', once:true}}
+  );
+});
+
+// ── COMPETENCY PILLS STAGGER ──────────────────────────────────────────────────
+gsap.utils.toArray('.comp-pill').forEach((pill, i) => {
+  gsap.fromTo(pill,
+    {opacity:0, scale:0.85},
+    {opacity:1, scale:1, duration:0.4, delay:i*0.05, ease:'back.out(1.5)',
+     scrollTrigger:{trigger:pill, start:'top 88%', once:true}}
+  );
+});
+</script>
+
 </body>
 </html>
