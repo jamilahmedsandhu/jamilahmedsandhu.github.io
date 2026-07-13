@@ -171,6 +171,56 @@ footer em{color:var(--gold);font-style:normal;}
   .contact-item{font-size:0.75rem;}
   footer{padding:1.5rem 1.2rem;}
 }
+
+/* ── PHASE 2: INTERACTIVE PHOTO ─────────────────────────────────────────── */
+#clippy-wrap{
+  position:fixed;bottom:2rem;right:2rem;z-index:9000;
+  display:flex;flex-direction:column;align-items:flex-end;gap:0.8rem;
+  pointer-events:none;
+}
+#clippy-bubble{
+  background:#E8590A;color:#0A1628;
+  font-family:"Montserrat",sans-serif;font-size:0.68rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.6rem 1.1rem 0.6rem 0.9rem;
+  border-left:3px solid #0A1628;
+  box-shadow:0 4px 20px rgba(0,0,0,0.25);
+  opacity:0;transform:translateY(8px) scale(0.95);
+  transition:opacity 0.3s ease,transform 0.3s ease;
+  pointer-events:none;white-space:nowrap;
+  display:flex;align-items:center;gap:0.6rem;
+  max-width:220px;
+}
+#clippy-bubble::before{
+  content:"⚠";font-size:0.75rem;flex-shrink:0;
+}
+#clippy-bubble.visible{
+  opacity:1;transform:translateY(0) scale(1);
+}
+#clippy-photo-container{
+  width:90px;height:110px;
+  perspective:600px;
+  pointer-events:all;cursor:pointer;
+  position:relative;
+}
+#clippy-photo{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  border:2px solid rgba(201,168,76,0.4);
+  box-shadow:0 8px 30px rgba(0,0,0,0.35);
+  transform-style:preserve-3d;
+  transition:transform 0.1s ease,box-shadow 0.3s ease;
+  display:block;
+}
+#clippy-photo-container:hover #clippy-photo{
+  box-shadow:0 12px 40px rgba(201,168,76,0.25);
+  border-color:var(--gold);
+}
+@media(max-width:768px){
+  #clippy-wrap{bottom:1rem;right:1rem;}
+  #clippy-photo-container{width:70px;height:85px;}
+  #clippy-bubble{font-size:0.6rem;padding:0.5rem 0.8rem;}
+}
 </style>
 </head>
 <body>
@@ -187,6 +237,17 @@ footer em{color:var(--gold);font-style:normal;}
     <li><a href="#contact-strip">Contact</a></li>
   </ul>
 </nav>
+
+<!-- ── PHASE 2: INTERACTIVE PHOTO ─────────────────────────────────────── -->
+<div id="clippy-wrap">
+  <div id="clippy-bubble" id="clippy-bubble"></div>
+  <div id="clippy-photo-container">
+    <img id="clippy-photo"
+      src="https://jamilahmedsandhu.github.io/images/Profile%20Photo%20.png"
+      alt="Jamil Ahmed Sandhu">
+  </div>
+</div>
+
 
 <!-- BANNER -->
 <section class="banner">
@@ -590,6 +651,135 @@ gsap.utils.toArray('.comp-pill').forEach((pill, i) => {
      scrollTrigger:{trigger:pill, start:'top 88%', once:true}}
   );
 });
+</script>
+
+
+<script>
+// ── PHASE 2: CLIPPY INTERACTIVE PHOTO ────────────────────────────────────────
+(function(){
+  const wrap      = document.getElementById('clippy-wrap');
+  const bubble    = document.getElementById('clippy-bubble');
+  const container = document.getElementById('clippy-photo-container');
+  const photo     = document.getElementById('clippy-photo');
+
+  // Nav tab messages
+  const navMessages = {
+    'index.html'   : '⚠ Zero LTI Since 2004',
+    '#'            : '⚠ Zero LTI Since 2004',
+    'projects.html': '11 Projects Delivered',
+    'insights.html': 'Read Safety Insights',
+    'cv.html'      : 'Download CV',
+    '#contact-strip': 'Permit Approved — Let's Connect'
+  };
+
+  // Section messages triggered on scroll
+  const sectionMessages = {
+    'Value Delivered'              : '22 Years. Zero LTI.',
+    'Resolving Complex HSE Challenges': 'Field-Proven Solutions',
+    'Project Impact'               : '$25B+ Portfolio',
+    'Engagement Approach'          : 'Field First. Always.',
+    'Core Competencies'            : 'ISO 45001 Lead Auditor',
+    'Credentials'                  : 'CertIOSH — CMIOSH In Progress'
+  };
+
+  let bubbleTimer = null;
+  let idleFired   = false;
+  let idleTimer   = null;
+
+  // Show bubble
+  function showBubble(text){
+    clearTimeout(bubbleTimer);
+    bubble.textContent = text;
+    bubble.classList.add('visible');
+  }
+
+  // Hide bubble after delay
+  function hideBubble(delay){
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(()=> bubble.classList.remove('visible'), delay||400);
+  }
+
+  // Nav hover listeners
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('mouseenter', ()=>{
+      const href = link.getAttribute('href');
+      const msg  = navMessages[href] || navMessages['#'];
+      if(msg) showBubble(msg);
+      resetIdle();
+    });
+    link.addEventListener('mouseleave', ()=> hideBubble(600));
+  });
+
+  // 3D tilt on mouse move
+  document.addEventListener('mousemove', e => {
+    const rect   = container.getBoundingClientRect();
+    const cx     = rect.left + rect.width  / 2;
+    const cy     = rect.top  + rect.height / 2;
+    const dx     = (e.clientX - cx) / window.innerWidth;
+    const dy     = (e.clientY - cy) / window.innerHeight;
+    const tiltX  = dy * -18;
+    const tiltY  = dx *  18;
+    photo.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.04)`;
+    resetIdle();
+  });
+
+  // Reset tilt on mouse leave window
+  document.addEventListener('mouseleave', ()=>{
+    photo.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+  });
+
+  // Scroll-based section messages
+  const sectionTitles = document.querySelectorAll('.section-title');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const text = entry.target.textContent.trim();
+        const msg  = sectionMessages[text];
+        if(msg){
+          showBubble(msg);
+          hideBubble(3500);
+        }
+      }
+    });
+  }, {threshold: 0.6});
+
+  sectionTitles.forEach(title => observer.observe(title));
+
+  // Idle trigger — fires once only after 15 seconds inactivity
+  function resetIdle(){
+    clearTimeout(idleTimer);
+    if(idleFired) return;
+    idleTimer = setTimeout(()=>{
+      if(!idleFired){
+        idleFired = true;
+        showBubble('Need help navigating?');
+        hideBubble(4000);
+      }
+    }, 15000);
+  }
+
+  // Photo click — bounce animation
+  container.addEventListener('click', ()=>{
+    gsap.fromTo(photo,
+      {y:0},
+      {y:-12, duration:0.2, ease:'power2.out', yoyo:true, repeat:1,
+       onComplete:()=> gsap.to(photo,{y:0,duration:0.3,ease:'elastic.out(1,0.4)'})
+      }
+    );
+    showBubble('Zero LTI Since 2004');
+    hideBubble(3000);
+  });
+
+  // Start idle timer on load
+  resetIdle();
+
+  // Entrance animation — slide up from bottom
+  gsap.fromTo('#clippy-wrap',
+    {y:60, opacity:0},
+    {y:0,  opacity:1, duration:1.2, delay:1.8, ease:'elastic.out(1,0.6)'}
+  );
+
+})();
 </script>
 
 </body>
