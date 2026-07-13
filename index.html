@@ -174,52 +174,75 @@ footer em{color:var(--gold);font-style:normal;}
 
 /* ── PHASE 2: INTERACTIVE PHOTO ─────────────────────────────────────────── */
 #clippy-wrap{
-  position:fixed;bottom:2rem;right:2rem;z-index:9000;
-  display:flex;flex-direction:column;align-items:flex-end;gap:0.8rem;
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:9000;
+  display:flex;flex-direction:column;align-items:flex-end;gap:1rem;
   pointer-events:none;
 }
 #clippy-bubble{
-  background:#E8590A;color:#0A1628;
-  font-family:"Montserrat",sans-serif;font-size:0.68rem;font-weight:700;
-  letter-spacing:0.08em;text-transform:uppercase;
-  padding:0.6rem 1.1rem 0.6rem 0.9rem;
-  border-left:3px solid #0A1628;
-  box-shadow:0 4px 20px rgba(0,0,0,0.25);
-  opacity:0;transform:translateY(8px) scale(0.95);
-  transition:opacity 0.3s ease,transform 0.3s ease;
-  pointer-events:none;white-space:nowrap;
-  display:flex;align-items:center;gap:0.6rem;
-  max-width:220px;
+  background:#E8590A;
+  color:#ffffff;
+  font-family:"Montserrat",sans-serif;
+  font-size:0.72rem;font-weight:800;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.8rem 1.3rem;
+  border-left:4px solid #0A1628;
+  box-shadow:0 6px 30px rgba(232,89,10,0.4),0 2px 8px rgba(0,0,0,0.3);
+  opacity:0;
+  transform:translateY(12px) scale(0.9);
+  transition:opacity 0.25s ease,transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;
+  white-space:nowrap;
+  display:flex;align-items:center;gap:0.7rem;
+  position:relative;
+  max-width:260px;
 }
-#clippy-bubble::before{
-  content:"⚠";font-size:0.75rem;flex-shrink:0;
+#clippy-bubble::after{
+  content:"";
+  position:absolute;
+  bottom:-8px;right:30px;
+  width:0;height:0;
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:8px solid #E8590A;
+}
+#clippy-bubble-icon{
+  font-size:1rem;flex-shrink:0;
 }
 #clippy-bubble.visible{
   opacity:1;transform:translateY(0) scale(1);
 }
 #clippy-photo-container{
-  width:90px;height:110px;
-  perspective:600px;
+  width:120px;height:150px;
+  perspective:800px;
   pointer-events:all;cursor:pointer;
   position:relative;
+  filter:drop-shadow(0 8px 25px rgba(0,0,0,0.4));
 }
 #clippy-photo{
   width:100%;height:100%;
   object-fit:cover;object-position:center top;
-  border:2px solid rgba(201,168,76,0.4);
-  box-shadow:0 8px 30px rgba(0,0,0,0.35);
+  border:3px solid rgba(201,168,76,0.5);
+  box-shadow:0 8px 30px rgba(0,0,0,0.4),0 0 0 1px rgba(201,168,76,0.1);
   transform-style:preserve-3d;
-  transition:transform 0.1s ease,box-shadow 0.3s ease;
+  transition:box-shadow 0.3s ease,border-color 0.3s ease;
   display:block;
+  background:#112240;
 }
 #clippy-photo-container:hover #clippy-photo{
-  box-shadow:0 12px 40px rgba(201,168,76,0.25);
+  box-shadow:0 16px 50px rgba(201,168,76,0.3),0 0 0 1px rgba(201,168,76,0.3);
   border-color:var(--gold);
 }
+#clippy-glow{
+  position:absolute;inset:-4px;
+  background:radial-gradient(ellipse at center,rgba(201,168,76,0.15),transparent 70%);
+  pointer-events:none;opacity:0;transition:opacity 0.3s;
+  z-index:-1;
+}
+#clippy-photo-container:hover #clippy-glow{opacity:1;}
 @media(max-width:768px){
   #clippy-wrap{bottom:1rem;right:1rem;}
-  #clippy-photo-container{width:70px;height:85px;}
-  #clippy-bubble{font-size:0.6rem;padding:0.5rem 0.8rem;}
+  #clippy-photo-container{width:85px;height:105px;}
+  #clippy-bubble{font-size:0.62rem;padding:0.6rem 1rem;max-width:200px;}
 }
 </style>
 </head>
@@ -240,8 +263,12 @@ footer em{color:var(--gold);font-style:normal;}
 
 <!-- ── PHASE 2: INTERACTIVE PHOTO ─────────────────────────────────────── -->
 <div id="clippy-wrap">
-  <div id="clippy-bubble" id="clippy-bubble"></div>
+  <div id="clippy-bubble">
+    <span id="clippy-bubble-icon">⚠</span>
+    <span id="clippy-bubble-text">Zero LTI Since 2004</span>
+  </div>
   <div id="clippy-photo-container">
+    <div id="clippy-glow"></div>
     <img id="clippy-photo"
       src="https://jamilahmedsandhu.github.io/images/Profile%20Photo%20.png"
       alt="Jamil Ahmed Sandhu">
@@ -657,78 +684,92 @@ gsap.utils.toArray('.comp-pill').forEach((pill, i) => {
 <script>
 // ── PHASE 2: CLIPPY INTERACTIVE PHOTO ────────────────────────────────────────
 (function(){
-  const wrap      = document.getElementById('clippy-wrap');
-  const bubble    = document.getElementById('clippy-bubble');
-  const container = document.getElementById('clippy-photo-container');
-  const photo     = document.getElementById('clippy-photo');
+  const wrap       = document.getElementById('clippy-wrap');
+  const bubble     = document.getElementById('clippy-bubble');
+  const bubbleText = document.getElementById('clippy-bubble-text');
+  const bubbleIcon = document.getElementById('clippy-bubble-icon');
+  const container  = document.getElementById('clippy-photo-container');
+  const photo      = document.getElementById('clippy-photo');
 
-  // Nav tab messages
+  if(!wrap || !photo) return;
+
+  // Message config — icon + text per trigger
   const navMessages = {
-    'index.html'   : '⚠ Zero LTI Since 2004',
-    '#'            : '⚠ Zero LTI Since 2004',
-    'projects.html': '11 Projects Delivered',
-    'insights.html': 'Read Safety Insights',
-    'cv.html'      : 'Download CV',
-    '#contact-strip': 'Permit Approved — Let's Connect'
+    'index.html'    : {icon:'🏠', text:'Zero LTI Since 2004'},
+    '#'             : {icon:'🏠', text:'Zero LTI Since 2004'},
+    'projects.html' : {icon:'📋', text:'11 Projects Delivered'},
+    'insights.html' : {icon:'💡', text:'Read Safety Insights'},
+    'cv.html'       : {icon:'📄', text:'Download My CV'},
+    '#contact-strip': {icon:'✅', text:'Permit Approved — Let's Connect'}
   };
 
-  // Section messages triggered on scroll
   const sectionMessages = {
-    'Value Delivered'              : '22 Years. Zero LTI.',
-    'Resolving Complex HSE Challenges': 'Field-Proven Solutions',
-    'Project Impact'               : '$25B+ Portfolio',
-    'Engagement Approach'          : 'Field First. Always.',
-    'Core Competencies'            : 'ISO 45001 Lead Auditor',
-    'Credentials'                  : 'CertIOSH — CMIOSH In Progress'
+    'Value Delivered'                  : {icon:'💼', text:'22 Years. Zero LTI.'},
+    'Resolving Complex HSE Challenges' : {icon:'🔧', text:'Field-Proven Solutions'},
+    'Project Impact'                   : {icon:'🏗', text:'$25B+ Portfolio'},
+    'Engagement Approach'              : {icon:'🦺', text:'Field First. Always.'},
+    'Core Competencies'                : {icon:'🎯', text:'ISO 45001 Lead Auditor'},
+    'Credentials'                      : {icon:'🏅', text:'CertIOSH — CMIOSH In Progress'}
   };
 
   let bubbleTimer = null;
   let idleFired   = false;
   let idleTimer   = null;
+  let currentTilt = {x:0, y:0};
+  let targetTilt  = {x:0, y:0};
+  let rafId       = null;
 
-  // Show bubble
-  function showBubble(text){
+  // Show bubble with icon and text
+  function showBubble(icon, text){
     clearTimeout(bubbleTimer);
-    bubble.textContent = text;
+    bubbleIcon.textContent = icon;
+    bubbleText.textContent = text;
     bubble.classList.add('visible');
   }
 
-  // Hide bubble after delay
   function hideBubble(delay){
     clearTimeout(bubbleTimer);
-    bubbleTimer = setTimeout(()=> bubble.classList.remove('visible'), delay||400);
+    bubbleTimer = setTimeout(()=> bubble.classList.remove('visible'), delay || 500);
   }
 
   // Nav hover listeners
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('mouseenter', ()=>{
       const href = link.getAttribute('href');
-      const msg  = navMessages[href] || navMessages['#'];
-      if(msg) showBubble(msg);
+      const msg  = navMessages[href];
+      if(msg) showBubble(msg.icon, msg.text);
       resetIdle();
     });
-    link.addEventListener('mouseleave', ()=> hideBubble(600));
+    link.addEventListener('mouseleave', ()=> hideBubble(800));
   });
 
-  // 3D tilt on mouse move
+  // Smooth 3D tilt with lerp
+  function lerp(a, b, t){ return a + (b - a) * t; }
+
   document.addEventListener('mousemove', e => {
-    const rect   = container.getBoundingClientRect();
-    const cx     = rect.left + rect.width  / 2;
-    const cy     = rect.top  + rect.height / 2;
-    const dx     = (e.clientX - cx) / window.innerWidth;
-    const dy     = (e.clientY - cy) / window.innerHeight;
-    const tiltX  = dy * -18;
-    const tiltY  = dx *  18;
-    photo.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.04)`;
+    const cx = window.innerWidth  / 2;
+    const cy = window.innerHeight / 2;
+    const dx = (e.clientX - cx) / cx;
+    const dy = (e.clientY - cy) / cy;
+    targetTilt.x = dy * -22;
+    targetTilt.y = dx *  22;
     resetIdle();
   });
 
-  // Reset tilt on mouse leave window
+  function animateTilt(){
+    currentTilt.x = lerp(currentTilt.x, targetTilt.x, 0.08);
+    currentTilt.y = lerp(currentTilt.y, targetTilt.y, 0.08);
+    photo.style.transform = `rotateX(${currentTilt.x.toFixed(2)}deg) rotateY(${currentTilt.y.toFixed(2)}deg)`;
+    rafId = requestAnimationFrame(animateTilt);
+  }
+  animateTilt();
+
   document.addEventListener('mouseleave', ()=>{
-    photo.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+    targetTilt.x = 0;
+    targetTilt.y = 0;
   });
 
-  // Scroll-based section messages
+  // Scroll section messages
   const sectionTitles = document.querySelectorAll('.section-title');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -736,48 +777,44 @@ gsap.utils.toArray('.comp-pill').forEach((pill, i) => {
         const text = entry.target.textContent.trim();
         const msg  = sectionMessages[text];
         if(msg){
-          showBubble(msg);
+          showBubble(msg.icon, msg.text);
           hideBubble(3500);
         }
       }
     });
-  }, {threshold: 0.6});
+  }, {threshold:0.7});
+  sectionTitles.forEach(t => observer.observe(t));
 
-  sectionTitles.forEach(title => observer.observe(title));
-
-  // Idle trigger — fires once only after 15 seconds inactivity
+  // Idle trigger — once only
   function resetIdle(){
     clearTimeout(idleTimer);
     if(idleFired) return;
     idleTimer = setTimeout(()=>{
       if(!idleFired){
         idleFired = true;
-        showBubble('Need help navigating?');
-        hideBubble(4000);
+        showBubble('🧭', 'Need help navigating?');
+        hideBubble(4500);
       }
     }, 15000);
   }
 
-  // Photo click — bounce animation
+  // Click — bounce + message
   container.addEventListener('click', ()=>{
-    gsap.fromTo(photo,
-      {y:0},
-      {y:-12, duration:0.2, ease:'power2.out', yoyo:true, repeat:1,
-       onComplete:()=> gsap.to(photo,{y:0,duration:0.3,ease:'elastic.out(1,0.4)'})
-      }
-    );
-    showBubble('Zero LTI Since 2004');
-    hideBubble(3000);
+    gsap.timeline()
+      .to(photo, {y:-18, duration:0.18, ease:'power2.out'})
+      .to(photo, {y:0,   duration:0.6,  ease:'elastic.out(1,0.4)'});
+    showBubble('🦺', 'Zero LTI — Every Project, Every Site');
+    hideBubble(3500);
   });
 
-  // Start idle timer on load
-  resetIdle();
-
-  // Entrance animation — slide up from bottom
+  // Entrance animation
   gsap.fromTo('#clippy-wrap',
-    {y:60, opacity:0},
-    {y:0,  opacity:1, duration:1.2, delay:1.8, ease:'elastic.out(1,0.6)'}
+    {y:80, opacity:0},
+    {y:0,  opacity:1, duration:1.4, delay:2.0, ease:'elastic.out(1,0.5)'}
   );
+
+  // Start idle
+  resetIdle();
 
 })();
 </script>
