@@ -172,77 +172,87 @@ footer em{color:var(--gold);font-style:normal;}
   footer{padding:1.5rem 1.2rem;}
 }
 
-/* ── PHASE 2: INTERACTIVE PHOTO ─────────────────────────────────────────── */
+/* ── PHASE 2 v3: EXECUTIVE GUIDE ────────────────────────────────────────── */
 #clippy-wrap{
   position:fixed;bottom:1.5rem;right:1.5rem;z-index:9000;
-  display:flex;flex-direction:column;align-items:flex-end;gap:1rem;
+  display:flex;flex-direction:column;align-items:flex-end;gap:0.8rem;
   pointer-events:none;
 }
-#clippy-bubble{
-  background:#E8590A;
-  color:#ffffff;
-  font-family:"Montserrat",sans-serif;
-  font-size:0.72rem;font-weight:800;
-  letter-spacing:0.1em;text-transform:uppercase;
-  padding:0.8rem 1.3rem;
-  border-left:4px solid #0A1628;
-  box-shadow:0 6px 30px rgba(232,89,10,0.4),0 2px 8px rgba(0,0,0,0.3);
+#clippy-card{
+  background:rgba(10,22,40,0.96);
+  border:1px solid rgba(201,168,76,0.4);
+  border-bottom:3px solid var(--gold);
+  box-shadow:0 8px 40px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.1);
+  padding:1rem 1.4rem;
+  min-width:180px;max-width:240px;
   opacity:0;
-  transform:translateY(12px) scale(0.9);
-  transition:opacity 0.25s ease,transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  transform:translateY(10px) scale(0.96);
+  transition:opacity 0.25s ease,transform 0.3s cubic-bezier(0.34,1.4,0.64,1);
   pointer-events:none;
-  white-space:nowrap;
-  display:flex;align-items:center;gap:0.7rem;
   position:relative;
-  max-width:260px;
+  backdrop-filter:blur(10px);
 }
-#clippy-bubble::after{
+#clippy-card::after{
   content:"";
   position:absolute;
-  bottom:-8px;right:30px;
+  bottom:-10px;right:28px;
   width:0;height:0;
-  border-left:8px solid transparent;
-  border-right:8px solid transparent;
-  border-top:8px solid #E8590A;
+  border-left:9px solid transparent;
+  border-right:9px solid transparent;
+  border-top:9px solid rgba(201,168,76,0.5);
 }
-#clippy-bubble-icon{
-  font-size:1rem;flex-shrink:0;
-}
-#clippy-bubble.visible{
+#clippy-card.visible{
   opacity:1;transform:translateY(0) scale(1);
+}
+#clippy-card-label{
+  font-family:"Montserrat",sans-serif;
+  font-size:0.55rem;font-weight:700;
+  letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.3rem;display:block;
+}
+#clippy-card-title{
+  font-family:"Cormorant Garamond",serif;
+  font-size:1.1rem;font-weight:700;
+  color:var(--white);line-height:1.2;
+  display:block;margin-bottom:0.4rem;
+}
+#clippy-card-sub{
+  font-family:"Montserrat",sans-serif;
+  font-size:0.6rem;font-weight:500;
+  color:rgba(255,255,255,0.5);
+  letter-spacing:0.1em;display:block;
 }
 #clippy-photo-container{
   width:120px;height:150px;
-  perspective:800px;
-  pointer-events:all;cursor:pointer;
+  perspective:900px;
+  pointer-events:all;cursor:default;
   position:relative;
-  filter:drop-shadow(0 8px 25px rgba(0,0,0,0.4));
 }
 #clippy-photo{
   width:100%;height:100%;
   object-fit:cover;object-position:center top;
-  border:3px solid rgba(201,168,76,0.5);
-  box-shadow:0 8px 30px rgba(0,0,0,0.4),0 0 0 1px rgba(201,168,76,0.1);
-  transform-style:preserve-3d;
-  transition:box-shadow 0.3s ease,border-color 0.3s ease;
+  border:2px solid rgba(201,168,76,0.4);
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);
   display:block;
   background:#112240;
-}
-#clippy-photo-container:hover #clippy-photo{
-  box-shadow:0 16px 50px rgba(201,168,76,0.3),0 0 0 1px rgba(201,168,76,0.3);
-  border-color:var(--gold);
+  transform-origin:center center;
 }
 #clippy-glow{
-  position:absolute;inset:-4px;
-  background:radial-gradient(ellipse at center,rgba(201,168,76,0.15),transparent 70%);
-  pointer-events:none;opacity:0;transition:opacity 0.3s;
-  z-index:-1;
+  position:absolute;inset:-6px;
+  background:radial-gradient(ellipse at center,rgba(201,168,76,0.12),transparent 70%);
+  pointer-events:none;opacity:0;transition:opacity 0.4s;z-index:-1;
+  border-radius:2px;
 }
 #clippy-photo-container:hover #clippy-glow{opacity:1;}
+#clippy-photo-container:hover #clippy-photo{
+  border-color:rgba(201,168,76,0.7);
+  box-shadow:0 12px 40px rgba(201,168,76,0.2),0 4px 15px rgba(0,0,0,0.4);
+}
 @media(max-width:768px){
-  #clippy-wrap{bottom:1rem;right:1rem;}
-  #clippy-photo-container{width:85px;height:105px;}
-  #clippy-bubble{font-size:0.62rem;padding:0.6rem 1rem;max-width:200px;}
+  #clippy-wrap{bottom:0.8rem;right:0.8rem;}
+  #clippy-photo-container{width:80px;height:100px;}
+  #clippy-card{min-width:150px;max-width:190px;padding:0.8rem 1rem;}
+  #clippy-card-title{font-size:0.95rem;}
 }
 </style>
 </head>
@@ -261,11 +271,12 @@ footer em{color:var(--gold);font-style:normal;}
   </ul>
 </nav>
 
-<!-- ── PHASE 2: INTERACTIVE PHOTO ─────────────────────────────────────── -->
+<!-- ── PHASE 2 v3: EXECUTIVE GUIDE ────────────────────────────────────── -->
 <div id="clippy-wrap">
-  <div id="clippy-bubble">
-    <span id="clippy-bubble-icon">⚠</span>
-    <span id="clippy-bubble-text">Zero LTI Since 2004</span>
+  <div id="clippy-card">
+    <span id="clippy-card-label">Portfolio</span>
+    <span id="clippy-card-title">11 Projects</span>
+    <span id="clippy-card-sub">Explore →</span>
   </div>
   <div id="clippy-photo-container">
     <div id="clippy-glow"></div>
@@ -682,140 +693,100 @@ gsap.utils.toArray('.comp-pill').forEach((pill, i) => {
 
 
 <script>
-// ── PHASE 2: CLIPPY INTERACTIVE PHOTO ────────────────────────────────────────
+// ── PHASE 2 v3: EXECUTIVE GUIDE ──────────────────────────────────────────────
 (function(){
-  const wrap       = document.getElementById('clippy-wrap');
-  const bubble     = document.getElementById('clippy-bubble');
-  const bubbleText = document.getElementById('clippy-bubble-text');
-  const bubbleIcon = document.getElementById('clippy-bubble-icon');
-  const container  = document.getElementById('clippy-photo-container');
-  const photo      = document.getElementById('clippy-photo');
+  const card      = document.getElementById('clippy-card');
+  const cardLabel = document.getElementById('clippy-card-label');
+  const cardTitle = document.getElementById('clippy-card-title');
+  const cardSub   = document.getElementById('clippy-card-sub');
+  const container = document.getElementById('clippy-photo-container');
+  const photo     = document.getElementById('clippy-photo');
+  if(!card || !photo) return;
 
-  if(!wrap || !photo) return;
-
-  // Message config — icon + text per trigger
-  const navMessages = {
-    'index.html'    : {icon:'🏠', text:'Zero LTI Since 2004'},
-    '#'             : {icon:'🏠', text:'Zero LTI Since 2004'},
-    'projects.html' : {icon:'📋', text:'11 Projects Delivered'},
-    'insights.html' : {icon:'💡', text:'Read Safety Insights'},
-    'cv.html'       : {icon:'📄', text:'Download My CV'},
-    '#contact-strip': {icon:'✅', text:'Permit Approved — Let's Connect'}
+  // Card config per nav tab
+  const navCards = {
+    'index.html'    : {label:'Home',      title:'Zero LTI',            sub:'22 Years · Every Project'},
+    '#'             : {label:'Home',      title:'Zero LTI',            sub:'22 Years · Every Project'},
+    'projects.html' : {label:'Portfolio', title:'11 Projects',         sub:'Explore →'},
+    'insights.html' : {label:'Insights',  title:'Thought Leadership',  sub:'Read →'},
+    'cv.html'       : {label:'CV',        title:'Download',            sub:'Latest ATS Version'},
+    '#contact-strip': {label:'Contact',   title:'Let's Connect',      sub:'Riyadh · Available Now'}
   };
 
-  const sectionMessages = {
-    'Value Delivered'                  : {icon:'💼', text:'22 Years. Zero LTI.'},
-    'Resolving Complex HSE Challenges' : {icon:'🔧', text:'Field-Proven Solutions'},
-    'Project Impact'                   : {icon:'🏗', text:'$25B+ Portfolio'},
-    'Engagement Approach'              : {icon:'🦺', text:'Field First. Always.'},
-    'Core Competencies'                : {icon:'🎯', text:'ISO 45001 Lead Auditor'},
-    'Credentials'                      : {icon:'🏅', text:'CertIOSH — CMIOSH In Progress'}
+  // Card config per section
+  const sectionCards = {
+    'Value Delivered'                  : {label:'Experience',   title:'22 Years',        sub:'Zero LTI · Every Project'},
+    'Resolving Complex HSE Challenges' : {label:'Capability',   title:'Field-Proven',    sub:'Assessment Before Action'},
+    'Project Impact'                   : {label:'Portfolio',    title:'$25B+',           sub:'11 Projects Delivered'},
+    'Engagement Approach'              : {label:'Leadership',   title:'Field First',     sub:'Ground-Level Engagement'},
+    'Core Competencies'                : {label:'Expertise',    title:'ISO 45001',       sub:'CQI-IRCA Lead Auditor'},
+    'Credentials'                      : {label:'Professional', title:'CertIOSH',        sub:'CMIOSH In Progress'}
   };
 
-  let bubbleTimer = null;
-  let idleFired   = false;
-  let idleTimer   = null;
+  let cardTimer  = null;
   let currentTilt = {x:0, y:0};
   let targetTilt  = {x:0, y:0};
-  let rafId       = null;
 
-  // Show bubble with icon and text
-  function showBubble(icon, text){
-    clearTimeout(bubbleTimer);
-    bubbleIcon.textContent = icon;
-    bubbleText.textContent = text;
-    bubble.classList.add('visible');
+  function showCard(label, title, sub){
+    clearTimeout(cardTimer);
+    cardLabel.textContent = label;
+    cardTitle.textContent = title;
+    cardSub.textContent   = sub;
+    card.classList.add('visible');
   }
 
-  function hideBubble(delay){
-    clearTimeout(bubbleTimer);
-    bubbleTimer = setTimeout(()=> bubble.classList.remove('visible'), delay || 500);
+  function hideCard(delay){
+    clearTimeout(cardTimer);
+    cardTimer = setTimeout(()=> card.classList.remove('visible'), delay || 400);
   }
 
-  // Nav hover listeners
+  // Nav hover
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('mouseenter', ()=>{
-      const href = link.getAttribute('href');
-      const msg  = navMessages[href];
-      if(msg) showBubble(msg.icon, msg.text);
-      resetIdle();
+      const cfg = navCards[link.getAttribute('href')];
+      if(cfg) showCard(cfg.label, cfg.title, cfg.sub);
+      // Subtle photo lean toward nav
+      gsap.to(photo, {rotateY:-8, duration:0.4, ease:'power2.out'});
     });
-    link.addEventListener('mouseleave', ()=> hideBubble(800));
+    link.addEventListener('mouseleave', ()=>{
+      hideCard(600);
+      gsap.to(photo, {rotateY:currentTilt.y, duration:0.5, ease:'power2.out'});
+    });
   });
 
-  // Smooth 3D tilt with lerp
-  function lerp(a, b, t){ return a + (b - a) * t; }
-
-  document.addEventListener('mousemove', e => {
+  // Smooth 3D tilt — lerp
+  function lerp(a,b,t){return a+(b-a)*t;}
+  document.addEventListener('mousemove', e=>{
     const cx = window.innerWidth  / 2;
     const cy = window.innerHeight / 2;
-    const dx = (e.clientX - cx) / cx;
-    const dy = (e.clientY - cy) / cy;
-    targetTilt.x = dy * -22;
-    targetTilt.y = dx *  22;
-    resetIdle();
+    targetTilt.x = ((e.clientY - cy) / cy) * -14;
+    targetTilt.y = ((e.clientX - cx) / cx) *  14;
   });
+  document.addEventListener('mouseleave', ()=>{targetTilt.x=0;targetTilt.y=0;});
 
-  function animateTilt(){
-    currentTilt.x = lerp(currentTilt.x, targetTilt.x, 0.08);
-    currentTilt.y = lerp(currentTilt.y, targetTilt.y, 0.08);
+  (function animTilt(){
+    currentTilt.x = lerp(currentTilt.x, targetTilt.x, 0.06);
+    currentTilt.y = lerp(currentTilt.y, targetTilt.y, 0.06);
     photo.style.transform = `rotateX(${currentTilt.x.toFixed(2)}deg) rotateY(${currentTilt.y.toFixed(2)}deg)`;
-    rafId = requestAnimationFrame(animateTilt);
-  }
-  animateTilt();
+    requestAnimationFrame(animTilt);
+  })();
 
-  document.addEventListener('mouseleave', ()=>{
-    targetTilt.x = 0;
-    targetTilt.y = 0;
-  });
-
-  // Scroll section messages
-  const sectionTitles = document.querySelectorAll('.section-title');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+  // Scroll section reactions
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
       if(entry.isIntersecting){
-        const text = entry.target.textContent.trim();
-        const msg  = sectionMessages[text];
-        if(msg){
-          showBubble(msg.icon, msg.text);
-          hideBubble(3500);
-        }
+        const cfg = sectionCards[entry.target.textContent.trim()];
+        if(cfg){showCard(cfg.label,cfg.title,cfg.sub);hideCard(3000);}
       }
     });
-  }, {threshold:0.7});
-  sectionTitles.forEach(t => observer.observe(t));
+  },{threshold:0.7});
+  document.querySelectorAll('.section-title').forEach(t=>observer.observe(t));
 
-  // Idle trigger — once only
-  function resetIdle(){
-    clearTimeout(idleTimer);
-    if(idleFired) return;
-    idleTimer = setTimeout(()=>{
-      if(!idleFired){
-        idleFired = true;
-        showBubble('🧭', 'Need help navigating?');
-        hideBubble(4500);
-      }
-    }, 15000);
-  }
-
-  // Click — bounce + message
-  container.addEventListener('click', ()=>{
-    gsap.timeline()
-      .to(photo, {y:-18, duration:0.18, ease:'power2.out'})
-      .to(photo, {y:0,   duration:0.6,  ease:'elastic.out(1,0.4)'});
-    showBubble('🦺', 'Zero LTI — Every Project, Every Site');
-    hideBubble(3500);
-  });
-
-  // Entrance animation
+  // Entrance
   gsap.fromTo('#clippy-wrap',
-    {y:80, opacity:0},
-    {y:0,  opacity:1, duration:1.4, delay:2.0, ease:'elastic.out(1,0.5)'}
+    {y:70,opacity:0},
+    {y:0,opacity:1,duration:1.4,delay:2.2,ease:'elastic.out(1,0.5)'}
   );
-
-  // Start idle
-  resetIdle();
-
 })();
 </script>
 
