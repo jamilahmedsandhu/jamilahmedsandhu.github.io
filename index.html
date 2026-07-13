@@ -28,7 +28,7 @@ body{font-family:"Open Sans",sans-serif;background:var(--offwhite);color:var(--c
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.3);padding:0 4rem;display:flex;align-items:center;justify-content:space-between;height:70px;}
-.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:600;color:var(--gold);text-decoration:none;}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:700;color:var(--gold);text-decoration:none;letter-spacing:0.02em;}
 .nav-logo span{color:var(--white);font-weight:300;}
 .nav-links{display:flex;gap:0;list-style:none;}
 .nav-links a{font-family:"Montserrat",sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.8);text-decoration:none;padding:0.5rem 1.2rem;border:1px solid transparent;transition:all 0.3s;position:relative;}
@@ -75,8 +75,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,22,40,0.
 /* PROBLEMS */
 .problems-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;}
 .problem-item{padding:1.1rem 1.4rem;border:1px solid rgba(0,0,0,0.07);display:flex;align-items:flex-start;gap:0.8rem;transition:all 0.3s;background:var(--white);}
-.problem-item:hover{background:var(--navy);border-color:var(--navy);}
-.problem-item:hover .problem-text{color:rgba(255,255,255,0.85);}
+.problem-item:hover{background:var(--navy);border-color:rgba(201,168,76,0.2);transform:translateX(4px);}
+.problem-item:hover .problem-text{color:rgba(255,255,255,0.9);}.problem-item{transition:all 0.3s ease;}
 .problem-item:hover .problem-bullet{color:var(--gold);}
 .problem-bullet{color:var(--gold-dim);font-size:0.7rem;margin-top:0.2rem;flex-shrink:0;}
 .problem-text{font-family:"Open Sans",sans-serif;font-size:0.875rem;color:var(--charcoal);line-height:1.5;}
@@ -109,17 +109,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,22,40,0.
 /* COMPETENCIES */
 .competencies-wrap{display:flex;flex-wrap:wrap;gap:0.6rem;}
 .comp-pill{font-family:"Montserrat",sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.5rem 1.1rem;border:1px solid rgba(10,22,40,0.25);color:var(--navy);background:var(--white);transition:all 0.3s;cursor:default;}
-.comp-pill:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--gold);}
+.comp-pill:hover{background:rgba(10,22,40,0.08);border-color:var(--navy);color:var(--navy);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 
 /* CREDENTIALS */
 .credentials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
-.cred-block h4{font-family:"Montserrat",sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(201,168,76,0.2);}
+.cred-block{transition:all 0.3s;}.cred-block:hover .cred-block h4{color:var(--gold-light);}.cred-block h4{font-family:"Montserrat",sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(201,168,76,0.2);}
 .cred-block ul{list-style:none;}
 .cred-block ul li{font-family:"Open Sans",sans-serif;font-size:0.82rem;color:rgba(255,255,255,0.65);line-height:1.5;padding:0.3rem 0;display:flex;align-items:flex-start;gap:0.6rem;}
 .cred-block ul li::before{content:"▸";color:var(--gold);font-size:0.65rem;margin-top:0.2rem;flex-shrink:0;}
 .approvals-row{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:0.5rem;}
 .approval-badge{font-family:"Montserrat",sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 1rem;border:1px solid rgba(201,168,76,0.3);color:rgba(255,255,255,0.7);transition:all 0.3s;}
-.approval-badge:hover{border-color:var(--gold);color:var(--gold);}
+.approval-badge:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);transform:translateY(-2px);}
 
 /* CONTACT STRIP */
 .contact-strip{background:var(--navy-mid);padding:3rem 4rem;border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);}
@@ -178,7 +178,7 @@ footer em{color:var(--gold);font-style:normal;}
 <canvas id="cursorCanvas"></canvas>
 
 <nav>
-  <a href="index.html" class="nav-logo">Jamil <span>Ahmed Sandhu</span></a>
+  <a href="index.html" class="nav-logo"><span>Jamil Ahmed</span> Sandhu</a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="projects.html">Projects</a></li>
