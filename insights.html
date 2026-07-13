@@ -218,12 +218,15 @@ document.querySelectorAll('a[href]').forEach(link => {
   }
 });
 
-// Section reveals
-gsap.utils.toArray('.section-title, .page-title').forEach(el => {
+// Banner entrance — handles page-title and page-eyebrow directly, no scroll trigger needed
+gsap.from('.page-banner-inner > *', {opacity:0, y:25, duration:0.8, stagger:0.15, delay:0.3, ease:'power3.out'});
+
+// Section reveals — section-title only (not page-title to avoid conflict)
+gsap.utils.toArray('.section-title').forEach(el => {
   gsap.fromTo(el, {opacity:0,y:25}, {opacity:1,y:0,duration:0.8,ease:'power3.out',
     scrollTrigger:{trigger:el,start:'top 85%',once:true}});
 });
-gsap.utils.toArray('.section-eyebrow, .page-eyebrow').forEach(el => {
+gsap.utils.toArray('.section-eyebrow').forEach(el => {
   gsap.fromTo(el, {opacity:0,x:-15}, {opacity:1,x:0,duration:0.6,ease:'power2.out',
     scrollTrigger:{trigger:el,start:'top 88%',once:true}});
 });
@@ -248,9 +251,6 @@ gsap.utils.toArray('.sample-card').forEach((card, i) => {
     {opacity:1, scale:1, duration:0.5, delay:i*0.1, ease:'back.out(1.3)',
      scrollTrigger:{trigger:card, start:'top 88%', once:true}});
 });
-
-// Banner entrance
-gsap.from('.page-banner-inner > *', {opacity:0, y:25, duration:0.8, stagger:0.15, delay:0.3, ease:'power3.out'});
 </script>
 
 </body>

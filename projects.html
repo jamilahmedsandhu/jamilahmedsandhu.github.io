@@ -526,11 +526,11 @@ document.querySelectorAll('a[href]').forEach(link => {
 });
 
 // Section reveals
-gsap.utils.toArray('.section-title, .page-title').forEach(el => {
+gsap.utils.toArray('.section-title').forEach(el => {
   gsap.fromTo(el, {opacity:0,y:25}, {opacity:1,y:0,duration:0.8,ease:'power3.out',
     scrollTrigger:{trigger:el,start:'top 85%',once:true}});
 });
-gsap.utils.toArray('.section-eyebrow, .page-eyebrow').forEach(el => {
+gsap.utils.toArray('.section-eyebrow').forEach(el => {
   gsap.fromTo(el, {opacity:0,x:-15}, {opacity:1,x:0,duration:0.6,ease:'power2.out',
     scrollTrigger:{trigger:el,start:'top 88%',once:true}});
 });
